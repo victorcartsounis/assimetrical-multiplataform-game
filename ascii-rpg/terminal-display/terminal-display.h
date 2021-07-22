@@ -18,10 +18,17 @@ class TerminalDisplay{
     public:
         TerminalDisplay() 
         : m_screenState(ScreenState::Menu) {
-            ChangeScreen(ScreenState::Menu);
         }
 
         void ChangeScreen(ScreenState screenState);
+
+        void LoadMainMenuScene();
+
+        void LoadBattleScene();
+
+        void LoadBattleScene(std::string playerVocation, std::string enemyName);
+        
+        void LoadWorldMapScene();
     
     private:
         ScreenState m_screenState;
