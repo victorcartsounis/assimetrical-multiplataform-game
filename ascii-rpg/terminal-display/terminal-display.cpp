@@ -9,8 +9,8 @@ using namespace TerminalDisplayFeatures;
 //Create a game.cpp object -> the game handle the itens, player, and monsters.
 
 //screen sizes
-const int height = 64;
-const int width = 128;
+// const int height = 64;
+// const int width = 128;
 
 
 void
@@ -50,8 +50,20 @@ TerminalDisplay::LoadWorldMapScene() {
             break;
 
         default:
+            ClearTerminal();
             break;
     }
+}
+
+void
+TerminalDisplay::LoadStatusMenuScene() {
+    ClearTerminal();
+    std::cout << LoadSceneFromFile("scenes/statusmenu.txt");
+
+    //Reading choice
+    char choice;
+    std::cin >> choice;
+    LoadMainMenuScene();
 }
 
 void
@@ -70,12 +82,19 @@ TerminalDisplay::LoadBattleScene() {
             break;
 
         default:
+            ClearTerminal();
             break;
     }
 }
 
 void
 TerminalDisplay::LoadBattleScene(std::string playerVocation, std::string enemyName) {
+    //Instantiate player Player player;
+
+    //Instantiate enemy Enemy enemy = enemy(enemyName);
+
+    //Instantiate battle Battle battle = Battle(player, enemy);
+
     ClearTerminal();
     std::cout << LoadSceneFromFile("creaturesimage/" + enemyName + ".txt");
     std::cout << LoadSceneFromFile("creaturesimage/" + playerVocation + ".txt");
@@ -90,6 +109,7 @@ TerminalDisplay::LoadBattleScene(std::string playerVocation, std::string enemyNa
             break;
 
         default:
+            ClearTerminal();
             break;
     }
 }
@@ -100,9 +120,10 @@ TerminalDisplay::LoadMainMenuScene() {
     //Printing menu
     std::cout << "Hello player, what do you want?\n";
     std::cout << "1- Visit world map\n";
-    std::cout << "2- Open skills menu\n";
-    std::cout << "3- Open status menu\n";
-    std::cout << "4- Open store\n";
+    std::cout << "2- Open status menu\n";
+    // std::cout << "3- Open skills menu\n";
+    // std::cout << "4- Open store\n";
+    std::cout << "0- To exit the game\n";
 
     //Reading choice
     char choice;
@@ -111,8 +132,12 @@ TerminalDisplay::LoadMainMenuScene() {
         case '1':
             LoadWorldMapScene();
             break;
+        case '2':
+            LoadStatusMenuScene();
+            break;
 
         default:
+            ClearTerminal();
             break;
     }
 

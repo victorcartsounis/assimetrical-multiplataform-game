@@ -29,6 +29,8 @@ class TerminalDisplay{
         void LoadBattleScene(std::string playerVocation, std::string enemyName);
         
         void LoadWorldMapScene();
+
+        void LoadStatusMenuScene();
     
     private:
         ScreenState m_screenState;
