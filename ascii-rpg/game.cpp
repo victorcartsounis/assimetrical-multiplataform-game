@@ -1,8 +1,10 @@
 #include <iostream>
 
 #include "terminal-display.h"
+#include "creatures.h"
 
 using namespace TerminalDisplayFeatures;
+using namespace CreaturesFeatures;
 
 TerminalDisplay terminalDisplay = TerminalDisplay();
 
@@ -11,11 +13,28 @@ Menu();
 
 void
 LoadFOO() {
+    //Load Everything
+}
+
+std::map<std::string, int> 
+ReadStatsFromFile(std::string creatureName) {
+    std::map<std::string, int> creatureStats = {
+        {"maxHealth", 100},
+        {"maxSkillsPoints", 10}
+    };
+
+    return creatureStats;
 
 }
 
 void
 Battle() {
+    std::map<std::string, int> playerStats = ReadStatsFromFile("player");
+    std::map<std::string, int> enemyStats = ReadStatsFromFile("monstername");
+
+    Player player = Player(playerStats);
+    Enemy enemy = Enemy(enemyStats);
+
     bool battleOver = false;
     while (!battleOver) {    
         //printing battle scene
@@ -24,10 +43,12 @@ Battle() {
         //Reading player choice
         char choice;
         std::cin >> choice;
+
         switch (choice) {
             case '1':
                 //Case Attack
-                battleOver = true;
+                battleOver = player.Attack(enemy);
+                battleOver = enemy.Attack(player);
                 break;
             case '2':
                 //Case Items
@@ -39,11 +60,13 @@ Battle() {
                 break;
             case '4':
                 //Case Exit
+                battleOver = true;
                 Menu();
                 break;
             default:
                 break;
         }
+
     }
 }
 
@@ -67,7 +90,18 @@ WorldMap() {
 
 void
 Status() {
-    
+    //printing status
+    terminalDisplay.DisplayScene(SceneState::kStatus);
+
+    //Reading player choice
+    char choice;
+    std::cin >> choice;
+    switch (choice) {
+        //There is no cases for now
+        default:
+            Menu();
+            break;
+    }
 }
 
 void

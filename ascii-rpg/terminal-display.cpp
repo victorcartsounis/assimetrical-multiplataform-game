@@ -31,6 +31,9 @@ TerminalDisplay::DisplayScene(SceneState sceneState) {
         case SceneState::kWorldMap:
             std::cout << LoadSceneFromFile("terminal-display/scenes/worldmap.txt");
             break;
+        case SceneState::kStatus:
+            std::cout << LoadSceneFromFile("terminal-display/scenes/statusmenu.txt");
+            break;
         case SceneState::kBattle:
             std::cout << LoadSceneFromFile("terminal-display/creaturesimage/monstersample.txt");
             std::cout << LoadSceneFromFile("terminal-display/creaturesimage/playersample.txt");
