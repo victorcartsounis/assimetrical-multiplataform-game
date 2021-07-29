@@ -1,13 +1,14 @@
 #ifndef TERMINAL_DISPLAY
 #define TERMINAL_DISPLAY
 
+#include "creatures.h"
+using namespace CreaturesFeatures;
 
 namespace TerminalDisplayFeatures {
-
+    
 enum class SceneState {
     kMenu,
     kWorldMap,
-    kBattle,
     kBattleRewards,
     kSkills,
     kStatus
@@ -20,6 +21,8 @@ class TerminalDisplay{
         void ClearTerminal();
 
         void DisplayScene(SceneState screenState);
+
+        void PrintBattle(const Player player, const Enemy enemy);
 
         std::string LoadSceneFromFile(std::string filepath);
     

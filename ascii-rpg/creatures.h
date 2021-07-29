@@ -7,8 +7,9 @@ namespace CreaturesFeatures {
 
 class Creature {
     public:
-        Creature(std::map<std::string, int> creatureStats) 
-            : m_maxHealth(creatureStats["maxHealth"])
+        Creature(std::string name, std::map<std::string, int> creatureStats) 
+            : m_name(name)
+            , m_maxHealth(creatureStats["maxHealth"])
             , m_maxSkillsPoints(creatureStats["maxSkillsPoints"])
             , m_actualHealth(m_maxHealth)
             , m_actualSkillPoints(m_maxSkillsPoints)
@@ -17,7 +18,11 @@ class Creature {
         {
         };
 
+        std::string GetName() const { return m_name; }
+
         int GetHealth() const { return m_actualHealth; }
+
+        int GetMaxHealth() const { return m_maxHealth; }
 
         int GetDefense() const { return m_defense; }
 
@@ -27,6 +32,7 @@ class Creature {
         }
        
     private:
+        std::string m_name;
         int m_maxHealth;
         int m_maxSkillsPoints;
 
@@ -41,7 +47,7 @@ class Creature {
 
 class Enemy : public Creature {
     public:
-        Enemy(std::map<std::string, int> creatureStats) : Creature(creatureStats)
+        Enemy(std::string name, std::map<std::string, int> creatureStats) : Creature(name, creatureStats)
         {
         };
         
@@ -54,7 +60,7 @@ class Enemy : public Creature {
 
 class Player : public Creature {
     public:
-        Player(std::map<std::string, int> creatureStats) : Creature(creatureStats)
+        Player(std::string name, std::map<std::string, int> creatureStats) : Creature(name, creatureStats)
         {
         };
 

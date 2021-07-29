@@ -22,9 +22,7 @@ ReadStatsFromFile(std::string creatureName) {
         {"maxHealth", 100},
         {"maxSkillsPoints", 10}
     };
-
     return creatureStats;
-
 }
 
 void
@@ -32,13 +30,13 @@ Battle() {
     std::map<std::string, int> playerStats = ReadStatsFromFile("player");
     std::map<std::string, int> enemyStats = ReadStatsFromFile("monstername");
 
-    Player player = Player(playerStats);
-    Enemy enemy = Enemy(enemyStats);
+    Player player = Player("playername", playerStats);
+    Enemy enemy = Enemy("rat", enemyStats);
 
     bool battleOver = false;
     while (!battleOver) {    
         //printing battle scene
-        terminalDisplay.DisplayScene(SceneState::kBattle);
+        terminalDisplay.PrintBattle(player, enemy);
         
         //Reading player choice
         char choice;
