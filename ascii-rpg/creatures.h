@@ -2,6 +2,7 @@
 #define CREATURES
 
 #include <map>
+#include <vector>
 
 namespace CreaturesFeatures {
 
@@ -50,11 +51,13 @@ class Enemy : public Creature {
         Enemy(std::string name, std::map<std::string, int> creatureStats) : Creature(name, creatureStats)
         {
         };
+
+        int GetExperience() const { return m_experience; }
         
         bool Attack(Creature& player);
 
     private:
-        int m_experience;
+        int m_experience = 1000;
 
 
 };
@@ -65,12 +68,22 @@ class Player : public Creature {
         {
         };
 
+        void AddExperience(int experience) { m_totalExperience += experience; }
+
+        void AddLevel() { m_level += 1; }
+
+        int GetLevel() const { return m_level; }
+
+        int GetExperience() const { return m_totalExperience; }
+
+        int GetNextLevelExperience() const { return m_levelExperience[m_level]; }
+
         bool Attack(Creature& enemy);
 
     private:
-        int m_level;
-        int m_experience;
-        int m_totalExperience;
+        int m_level = 0;
+        int m_totalExperience = 0;
+        std::vector<int> m_levelExperience {1000, 2000, 4000, 8000, 16000, 32000, 64000, 128000, 256000, 512000, 1024000, 2048000};
 
 };
 

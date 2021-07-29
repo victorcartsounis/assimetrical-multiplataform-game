@@ -44,6 +44,20 @@ ItemsMenuInBattle(const Player player, const Enemy enemy) {
 }
 
 void
+BattleResults(Player& player, const Enemy enemy, bool playerWon) {
+    if (playerWon) {
+        player.AddExperience(enemy.GetExperience());
+        while (player.GetExperience() >= player.GetNextLevelExperience()) {
+            player.AddLevel();
+            std::cout << "!!LEVEL UP to level: " << player.GetLevel();
+        }
+    }
+    char choice;
+    std::cin >> choice;
+    Menu();
+}
+
+void
 Battle() {
     std::map<std::string, int> playerStats = ReadStatsFromFile("player");
     std::map<std::string, int> enemyStats = ReadStatsFromFile("monstername");
@@ -55,7 +69,7 @@ Battle() {
     bool enemyWon = false;
     bool battleOver = false;
 
-    while (!playerWon || !enemyWon || !battleOver) {
+    while (!playerWon && !enemyWon && !battleOver) {
         //printing battle scene
         terminalDisplay.PrintBattle(player, enemy, BattleMenuOptions::kMenu);
         
@@ -66,8 +80,14 @@ Battle() {
         switch (choice) {
             case '1':
                 //Case Attack
-                playerWon = player.Attack(enemy);
-                enemyWon = enemy.Attack(player);
+                if (player.Attack(enemy)) {
+                    playerWon = true;
+                    break;
+                }
+                if (enemy.Attack(player)) {
+                    enemyWon = true;
+                    break;
+                }
                 break;
             case '2':
                 //Case Items
@@ -80,11 +100,17 @@ Battle() {
             case '4':
                 //Case Exit
                 battleOver = true;
-                Menu();
                 break;
             default:
                 break;
         }
+    }
+
+    if (battleOver) {
+        Menu();
+    } else {
+        terminalDisplay.PrintBattleResults(player, enemy, playerWon);
+        BattleResults(player, enemy, playerWon);
     }
 }
 
