@@ -48,7 +48,9 @@ class Creature {
 
 class Enemy : public Creature {
     public:
-        Enemy(std::string name, std::map<std::string, int> creatureStats) : Creature(name, creatureStats)
+        Enemy(std::string name, std::map<std::string, int> creatureStats) 
+            : Creature(name, creatureStats)
+            , m_experience(creatureStats["experience"])
         {
         };
 
@@ -57,14 +59,17 @@ class Enemy : public Creature {
         bool Attack(Creature& player);
 
     private:
-        int m_experience = 1000;
+        int m_experience;
 
 
 };
 
 class Player : public Creature {
     public:
-        Player(std::string name, std::map<std::string, int> creatureStats) : Creature(name, creatureStats)
+        Player(std::string name, std::map<std::string, int> playerStats)
+            : Creature(name, playerStats)
+            , m_level(playerStats["level"])
+            , m_totalExperience(playerStats["totalExperience"])
         {
         };
 

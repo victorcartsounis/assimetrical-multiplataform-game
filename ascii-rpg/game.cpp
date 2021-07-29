@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 
 #include "terminal-display.h"
 #include "creatures.h"
@@ -11,9 +12,74 @@ TerminalDisplay terminalDisplay = TerminalDisplay();
 void
 Menu();
 
+Player
+LoadPlayer() {
+    std::ifstream MyReadFile("data/player.txt");
+    if (!MyReadFile.is_open()) {
+        std::cerr << "Could not open the file - '"
+             << "player.txt" << "'\n";
+        EXIT_FAILURE;
+    }
+
+    std::map<std::string, int> playerStats;
+    std::vector<std::string> playerStatsOrder {
+     {"maxHealth"},
+     {"maxSkillsPoints"},
+     {"level"},
+     {"totalExperience"}
+    };
+
+    int number;
+    for (int i = 0; MyReadFile >> number; i++) {
+        playerStats.emplace(playerStatsOrder[i], number);
+    }
+
+    MyReadFile.close();
+
+    Player player = Player("Adolfo", playerStats);
+    return player;
+}
+
+// Enemy
+
+
+Enemy
+LoadEnemy(std::string monsterName){
+    std::ifstream MyReadFile("data/"+ monsterName +".txt");
+    if (!MyReadFile.is_open()) {
+        std::cerr << "Could not open the file - '"
+             << "data/" << monsterName << ".txt" << "'\n";
+        EXIT_FAILURE;
+    }
+    std::map<std::string, int> stats;
+    std::vector<std::string> statsOrder {
+     {"maxHealth"},
+     {"maxSkillsPoints"},
+     {"experience"}
+    };
+
+    int number;
+    for (int i = 0; MyReadFile >> number; i++) {
+        stats.emplace(statsOrder[i], number);
+    }
+
+    MyReadFile.close();
+
+    Enemy enemy = Enemy(monsterName, stats);
+    return enemy;
+}
+
 void
-LoadFOO() {
-    //Load Everything
+SavePlayer(const Player player) {
+
+    std::ofstream myfile;
+    myfile.open ("data/player.txt");
+    myfile << player.GetMaxHealth() << "\n";
+    myfile << "9999" << "\n";
+    myfile << player.GetLevel() << "\n";
+    myfile << player.GetExperience() << "\n";
+    myfile.close();
+
 }
 
 std::map<std::string, int> 
@@ -52,6 +118,7 @@ BattleResults(Player& player, const Enemy enemy, bool playerWon) {
             std::cout << "!!LEVEL UP to level: " << player.GetLevel();
         }
     }
+    SavePlayer(player);
     char choice;
     std::cin >> choice;
     Menu();
@@ -62,8 +129,12 @@ Battle() {
     std::map<std::string, int> playerStats = ReadStatsFromFile("player");
     std::map<std::string, int> enemyStats = ReadStatsFromFile("monstername");
 
-    Player player = Player("playername", playerStats);
-    Enemy enemy = Enemy("rat", enemyStats);
+    Player player = LoadPlayer();
+    Enemy enemy = LoadEnemy("rat");
+
+    // Previous loading version
+    // Player player = Player("player", ReadStatsFromFile("player"));
+    // Enemy enemy = Enemy("rat", ReadStatsFromFile("rat"));
 
     bool playerWon = false;
     bool enemyWon = false;
@@ -173,7 +244,6 @@ Menu() {
 
 int
 main() {
-    LoadFOO();
     Menu();
     return 1;
 }

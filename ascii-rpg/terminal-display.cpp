@@ -46,10 +46,10 @@ PrintBattleMenu(const Player player, const Enemy enemy) {
             //Priting TEMPORARY VERSION of battle menu
         std::string battleMenu = "";
         //printing top border
-        std::cout << "--------------------------------------------------------------------------------------------------------------------------------\n";
-        
+        std::cout << "-----------------------------------------------------------------";
+        std::cout << "---------------------------------------------------------------\n";
+
         //printing player health
-        
         std::string healthBar = "";
         healthBar = std::to_string(player.GetHealth()) + "/" + std::to_string(player.GetMaxHealth());
         int healthBarSize = 13 - healthBar.size();
@@ -59,11 +59,9 @@ PrintBattleMenu(const Player player, const Enemy enemy) {
         std::cout << "   HEALTH POINTS : " + healthBar;
 
         //printing player skill points
-
         std::cout << "  |  SKILL POINTS : 9999/9999  |  ";
 
         //printing enemy health
-
         std::string enemyHealthBar = "";
         enemyHealthBar = std::to_string(enemy.GetHealth()) + "/" + std::to_string(enemy.GetMaxHealth());
         int enemyHealthBarSize = 13 - enemyHealthBar.size();
@@ -76,7 +74,6 @@ PrintBattleMenu(const Player player, const Enemy enemy) {
         std::cout << "                                                               |\n";
 
         //printing options
-
         std::cout << "      (1) Attack                               (2) Items       |\n";
         std::cout << "                                                               |\n";
         std::cout << "      (3) Skills                               (4) Exit        |\n";
@@ -89,9 +86,9 @@ void
 TerminalDisplay::PrintBattleResults(Player player, Enemy enemy, bool playerWon) {
     ClearTerminal();
     if (playerWon) {
-        std::cout << "--------  You Won  --------";
+        std::cout << "--------  You Won  --------\n";
     } else {
-        std::cout << "-------  You Lose  --------";
+        std::cout << "-------  You Lose  --------\n";
     }
 }
 
