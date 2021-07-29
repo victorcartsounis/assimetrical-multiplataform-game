@@ -58,9 +58,9 @@ LoadEnemy(std::string monsterName){
      {"experience"}
     };
 
-    int number;
-    for (int i = 0; MyReadFile >> number; i++) {
-        stats.emplace(statsOrder[i], number);
+    int value;
+    for (int i = 0; MyReadFile >> value; i++) {
+        stats.emplace(statsOrder[i], value);
     }
 
     MyReadFile.close();
@@ -130,7 +130,7 @@ Battle() {
     std::map<std::string, int> enemyStats = ReadStatsFromFile("monstername");
 
     Player player = LoadPlayer();
-    Enemy enemy = LoadEnemy("rat");
+    Enemy enemy = LoadEnemy("troll");
 
     // Previous loading version
     // Player player = Player("player", ReadStatsFromFile("player"));
