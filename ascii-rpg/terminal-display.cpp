@@ -42,7 +42,52 @@ TerminalDisplay::DisplayScene(SceneState sceneState) {
 }
 
 void
-TerminalDisplay::PrintBattle(Player player, Enemy enemy) {
+PrintBattleMenu(const Player player, const Enemy enemy) {
+            //Priting TEMPORARY VERSION of battle menu
+        std::string battleMenu = "";
+        //printing top border
+        std::cout << "--------------------------------------------------------------------------------------------------------------------------------\n";
+        
+        //printing player health
+        
+        std::string healthBar = "";
+        healthBar = std::to_string(player.GetHealth()) + "/" + std::to_string(player.GetMaxHealth());
+        int healthBarSize = 13 - healthBar.size();
+        for (int i = 0; i < healthBarSize; i++) {
+            healthBar += " ";
+        }
+        std::cout << "   HEALTH POINTS : " + healthBar;
+
+        //printing player skill points
+
+        std::cout << "  |  SKILL POINTS : 9999/9999  |  ";
+
+        //printing enemy health
+
+        std::string enemyHealthBar = "";
+        enemyHealthBar = std::to_string(enemy.GetHealth()) + "/" + std::to_string(enemy.GetMaxHealth());
+        int enemyHealthBarSize = 13 - enemyHealthBar.size();
+        for (int i = 0; i < enemyHealthBarSize; i++) {
+            enemyHealthBar += " ";
+        }
+        std::cout << "Enemy health: " << enemyHealthBar << std::endl;
+
+        //printing blank line
+        std::cout << "                                                               |\n";
+
+        //printing options
+
+        std::cout << "      (1) Attack                               (2) Items       |\n";
+        std::cout << "                                                               |\n";
+        std::cout << "      (3) Skills                               (4) Exit        |\n";
+        std::cout << "                                                               |\n";
+        std::cout << "-----------------------------------------------------------------";
+        std::cout << "---------------------------------------------------------------\n";
+}
+
+void
+TerminalDisplay::PrintBattle(Player player, Enemy enemy, BattleMenuOptions battleMenuOption = BattleMenuOptions::kMenu) {
+    ClearTerminal();
     //Printing enemy image
     std::cout << LoadSceneFromFile("terminal-display/creaturesimage/monstersample.txt");
     // std::cout << LoadSceneFromFile("terminal-display/creaturesimage/" + enemy.GetName() + "txt");
@@ -51,46 +96,22 @@ TerminalDisplay::PrintBattle(Player player, Enemy enemy) {
     std::cout << LoadSceneFromFile("terminal-display/creaturesimage/playersample.txt");
     // std::cout << LoadSceneFromFile("terminal-display/creaturesimage/" + player.GetName() + "txt");
 
-    //Priting TEMPORARY VERSION of battle menu
-    std::string battleMenu = "";
-    //printing top border
-    std::cout << "--------------------------------------------------------------------------------------------------------------------------------\n";
-    
-    //printing player health
-    
-    std::string healthBar = "";
-    healthBar = std::to_string(player.GetHealth()) + "/" + std::to_string(player.GetMaxHealth());
-    int healthBarSize = 13 - healthBar.size();
-    for (int i = 0; i < healthBarSize; i++) {
-        healthBar += " ";
+    switch (battleMenuOption) {
+        case BattleMenuOptions::kMenu:
+            PrintBattleMenu(player, enemy);
+            break;
+        case BattleMenuOptions::kSkills:
+            std::cout << "SKILLS MENU\n";
+            break;
+        case BattleMenuOptions::kItems:
+            std::cout << "ITEMS MENU\n";
+            break;
+        default:
+            break;
     }
-    std::cout << "   HEALTH POINTS : " + healthBar;
-
-    //printing player skill points
-
-    std::cout << "  |  SKILL POINTS 9999/9999    |  ";
-
-    //printing enemy health
-
-    std::string enemyHealthBar = "";
-    enemyHealthBar = std::to_string(enemy.GetHealth()) + "/" + std::to_string(enemy.GetMaxHealth());
-    int enemyHealthBarSize = 13 - enemyHealthBar.size();
-    for (int i = 0; i < enemyHealthBarSize; i++) {
-        enemyHealthBar += " ";
-    }
-    std::cout << "Enemy health: " << enemyHealthBar << std::endl;
-
-    //printing blank line
-    std::cout << "                                                               |\n";
-
-    //printing options
-
-    std::cout << "      (1) Attack                               (2) Items       |\n";
-    std::cout << "                                                               |\n";
-    std::cout << "      (3) Skills                               (4) Exit        |\n";
-    std::cout << "                                                               |\n";
-    std::cout << "-----------------------------------------------------------------";
-    std::cout << "---------------------------------------------------------------\n";
+    
+    
+    
 
 }
 

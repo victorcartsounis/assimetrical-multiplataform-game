@@ -14,6 +14,12 @@ enum class SceneState {
     kStatus
 };
 
+enum class BattleMenuOptions {
+    kMenu,
+    kSkills,
+    kItems
+};
+
 class TerminalDisplay{
     public:
         TerminalDisplay();
@@ -22,7 +28,7 @@ class TerminalDisplay{
 
         void DisplayScene(SceneState screenState);
 
-        void PrintBattle(const Player player, const Enemy enemy);
+        void PrintBattle(const Player player, const Enemy enemy, const BattleMenuOptions battleMenuOption);
 
         std::string LoadSceneFromFile(std::string filepath);
     

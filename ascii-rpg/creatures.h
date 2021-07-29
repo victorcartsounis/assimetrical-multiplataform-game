@@ -54,6 +54,7 @@ class Enemy : public Creature {
         bool Attack(Creature& player);
 
     private:
+        int m_experience;
 
 
 };
