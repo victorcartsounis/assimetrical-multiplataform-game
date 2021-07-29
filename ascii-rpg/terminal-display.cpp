@@ -86,6 +86,16 @@ PrintBattleMenu(const Player player, const Enemy enemy) {
 }
 
 void
+TerminalDisplay::PrintBattleResults(Player player, Enemy enemy, bool playerWon) {
+    ClearTerminal();
+    if (playerWon) {
+        std::cout << "--------  You Won  --------";
+    } else {
+        std::cout << "-------  You Lose  --------";
+    }
+}
+
+void
 TerminalDisplay::PrintBattle(Player player, Enemy enemy, BattleMenuOptions battleMenuOption = BattleMenuOptions::kMenu) {
     ClearTerminal();
     //Printing enemy image
@@ -109,10 +119,6 @@ TerminalDisplay::PrintBattle(Player player, Enemy enemy, BattleMenuOptions battl
         default:
             break;
     }
-    
-    
-    
-
 }
 
 std::string
