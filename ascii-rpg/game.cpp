@@ -51,8 +51,11 @@ Battle() {
     Player player = Player("playername", playerStats);
     Enemy enemy = Enemy("rat", enemyStats);
 
+    bool playerWon = false;
+    bool enemyWon = false;
     bool battleOver = false;
-    while (!battleOver) {    
+
+    while (!playerWon || !enemyWon || !battleOver) {
         //printing battle scene
         terminalDisplay.PrintBattle(player, enemy, BattleMenuOptions::kMenu);
         
@@ -63,8 +66,8 @@ Battle() {
         switch (choice) {
             case '1':
                 //Case Attack
-                battleOver = player.Attack(enemy);
-                battleOver = enemy.Attack(player);
+                playerWon = player.Attack(enemy);
+                enemyWon = enemy.Attack(player);
                 break;
             case '2':
                 //Case Items
@@ -82,8 +85,6 @@ Battle() {
             default:
                 break;
         }
-        
-
     }
 }
 
