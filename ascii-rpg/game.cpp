@@ -22,9 +22,25 @@ ReadStatsFromFile(std::string creatureName) {
         {"maxHealth", 100},
         {"maxSkillsPoints", 10}
     };
-
     return creatureStats;
+}
 
+void
+SkillsMenuInBattle(const Player player, const Enemy enemy) {
+    terminalDisplay.PrintBattle(player, enemy, BattleMenuOptions::kSkills);
+
+    //Reading player choice
+    char choice;
+    std::cin >> choice;
+}
+
+void
+ItemsMenuInBattle(const Player player, const Enemy enemy) {
+    terminalDisplay.PrintBattle(player, enemy, BattleMenuOptions::kItems);
+
+    //Reading player choice
+    char choice;
+    std::cin >> choice;
 }
 
 void
@@ -32,13 +48,13 @@ Battle() {
     std::map<std::string, int> playerStats = ReadStatsFromFile("player");
     std::map<std::string, int> enemyStats = ReadStatsFromFile("monstername");
 
-    Player player = Player(playerStats);
-    Enemy enemy = Enemy(enemyStats);
+    Player player = Player("playername", playerStats);
+    Enemy enemy = Enemy("rat", enemyStats);
 
     bool battleOver = false;
     while (!battleOver) {    
         //printing battle scene
-        terminalDisplay.DisplayScene(SceneState::kBattle);
+        terminalDisplay.PrintBattle(player, enemy, BattleMenuOptions::kMenu);
         
         //Reading player choice
         char choice;
@@ -52,11 +68,11 @@ Battle() {
                 break;
             case '2':
                 //Case Items
-                battleOver = true;
+                ItemsMenuInBattle(player, enemy);
                 break;
             case '3':
                 //Case Skills
-                battleOver = true;
+                SkillsMenuInBattle(player, enemy);
                 break;
             case '4':
                 //Case Exit
@@ -66,6 +82,7 @@ Battle() {
             default:
                 break;
         }
+        
 
     }
 }
