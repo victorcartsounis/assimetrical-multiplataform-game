@@ -9,6 +9,7 @@ using namespace CreaturesFeatures;
 
 bool 
 Enemy::Attack(Creature& player) {
+    m_actualSkillPoints -= 100;
     srand((unsigned) time(0));
     int attackRange = 70 + (rand() % 60);
 

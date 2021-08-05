@@ -59,7 +59,14 @@ PrintBattleMenu(const Player player, const Enemy enemy) {
         std::cout << "   HEALTH POINTS : " + healthBar;
 
         //printing player skill points
-        std::cout << "  |  SKILL POINTS : 9999/9999  |  ";
+        std::string skillPointsBar = "";
+        skillPointsBar = std::to_string(player.GetSkillPoints()) + "/" + std::to_string(player.GetMaxSkillPoints());
+        int skillPointsBarSize = 13 - skillPointsBar.size();
+        for (int i = 0; i < skillPointsBarSize; i++) {
+            skillPointsBar += " ";
+        }
+        
+        std::cout << "   SKILL POINTS : " + skillPointsBar << "|";
 
         //printing enemy health
         std::string enemyHealthBar = "";
@@ -68,7 +75,17 @@ PrintBattleMenu(const Player player, const Enemy enemy) {
         for (int i = 0; i < enemyHealthBarSize; i++) {
             enemyHealthBar += " ";
         }
-        std::cout << "Enemy health: " << enemyHealthBar << std::endl;
+        std::cout << "   HEALTH POINTS : " << enemyHealthBar;
+
+        //printing ENEMY skill points
+        std::string enemySkillPointsBar = "";
+        enemySkillPointsBar = std::to_string(player.GetSkillPoints()) + "/" + std::to_string(player.GetMaxSkillPoints());
+        int enemySkillPointsBarSize = 13 - enemySkillPointsBar.size();
+        for (int i = 0; i < enemySkillPointsBarSize; i++) {
+            enemySkillPointsBar += " ";
+        }
+        
+        std::cout << "   SKILL POINTS : " + enemySkillPointsBar << std::endl;
 
         //printing blank line
         std::cout << "                                                               |\n";
@@ -87,6 +104,10 @@ TerminalDisplay::PrintBattleResults(Player player, Enemy enemy, bool playerWon) 
     ClearTerminal();
     if (playerWon) {
         std::cout << "--------  You Won  --------\n";
+        std::cout << "You earned " << enemy.GetExperience() << " experience points\n";
+        std::cout << "Your total experience is " << player.GetExperience() 
+            << "/" << player.GetNextLevelExperience() << std::endl;
+        std::cout << "You are at " << 100.0 * float(player.GetExperience())/float(player.GetNextLevelExperience()) << "%\n"; 
     } else {
         std::cout << "-------  You Lose  --------\n";
     }

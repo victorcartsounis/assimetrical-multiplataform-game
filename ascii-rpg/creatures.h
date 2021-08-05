@@ -11,9 +11,9 @@ class Creature {
         Creature(std::string name, std::map<std::string, int> creatureStats) 
             : m_name(name)
             , m_maxHealth(creatureStats["maxHealth"])
-            , m_maxSkillsPoints(creatureStats["maxSkillsPoints"])
+            , m_maxSkillPoints(creatureStats["maxSkillsPoints"])
             , m_actualHealth(m_maxHealth)
-            , m_actualSkillPoints(m_maxSkillsPoints)
+            , m_actualSkillPoints(m_maxSkillPoints)
             , m_attack(10)
             , m_defense(10)
         {
@@ -27,7 +27,11 @@ class Creature {
 
         int GetDefense() const { return m_defense; }
 
-        bool TakeDamage(int attackPower) { 
+        int GetSkillPoints() const { return m_actualSkillPoints; }
+
+        int GetMaxSkillPoints() const { return m_maxSkillPoints; }
+
+        bool TakeDamage(int attackPower) {
             m_actualHealth -= attackPower;
             return (m_actualHealth <= 0);
         }
@@ -35,7 +39,7 @@ class Creature {
     private:
         std::string m_name;
         int m_maxHealth;
-        int m_maxSkillsPoints;
+        int m_maxSkillPoints;
 
     protected:
         int m_actualHealth;

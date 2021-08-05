@@ -23,10 +23,10 @@ LoadPlayer() {
 
     std::map<std::string, int> playerStats;
     std::vector<std::string> playerStatsOrder {
-     {"maxHealth"},
-     {"maxSkillsPoints"},
-     {"level"},
-     {"totalExperience"}
+        {"maxHealth"},
+        {"maxSkillsPoints"},
+        {"level"},
+        {"totalExperience"}
     };
 
     int number;
@@ -36,12 +36,8 @@ LoadPlayer() {
 
     MyReadFile.close();
 
-    Player player = Player("Adolfo", playerStats);
-    return player;
+    return Player("Danierusan", playerStats);
 }
-
-// Enemy
-
 
 Enemy
 LoadEnemy(std::string monsterName){
