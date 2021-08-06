@@ -3,9 +3,11 @@
 
 #include "terminal-display.h"
 #include "creatures.h"
+#include "items.h"
 
 using namespace TerminalDisplayFeatures;
 using namespace CreaturesFeatures;
+using namespace ItemsFeatures;
 
 // file paths
 const std::string creaturePath = "terminal-display/creaturesimage/";
@@ -26,6 +28,7 @@ TerminalDisplay::DisplayScene(SceneState sceneState) {
             std::cout << "Hello player, what do you want?\n";
             std::cout << "1- Visit world map\n";
             std::cout << "2- Open status menu\n";
+            std::cout << "3- Open inventory menu\n";
             // std::cout << "3- Open skills menu\n";
             // std::cout << "4- Open store\n";
             std::cout << "0- To exit the game\n";
@@ -38,6 +41,16 @@ TerminalDisplay::DisplayScene(SceneState sceneState) {
             break;
         default:
             break;
+    }
+}
+
+void
+TerminalDisplay::PrintInventoryMenu(const Player player) {
+    ClearTerminal();
+    std::cout << "---------------------- INVENTORY -----------------------\n\n";
+    for (int i = 0; i < player.GetInventory().size(); i++) {
+        std::cout << "(" << ( i + 1 ) << ")  " << player.GetInventory()[i].GetName()
+        << " -> '" << player.GetInventory()[i].GetDescription() << "'" << std::endl;        
     }
 }
 

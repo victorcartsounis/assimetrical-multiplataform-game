@@ -23,3 +23,31 @@ Player::Attack(Creature& enemy) {
     bool isDead = enemy.TakeDamage(attackPower);
     return isDead;
 }
+
+void
+Player::OnEquip(Item& item) {
+    switch (item.GetProperty().first) {
+        case (PropertyName::kAttack):
+            m_attack += item.GetProperty().second;
+            break;
+        case (PropertyName::kDefense):
+            m_defense += item.GetProperty().second;
+            break;
+        default:
+            break;
+    }
+}
+
+void
+Player::OnDequip(Item& item) {
+    switch (item.GetProperty().first) {
+        case (PropertyName::kAttack):
+            m_attack -= item.GetProperty().second;
+            break;
+        case (PropertyName::kDefense):
+            m_defense -= item.GetProperty().second;
+            break;
+        default:
+            break;
+    }
+}
