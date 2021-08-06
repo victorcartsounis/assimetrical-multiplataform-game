@@ -1,0 +1,10 @@
+{
+    "m_id": 12500,
+    "m_name": "TrollSlayer",
+    "m_description": "A magic sword to kill internet trolls",
+    "m_iconPath": "data/items/sprites/trollslayer.txt",
+    "equipable": true,
+    "m_property": {
+        "kAttack": 100
+    }
+}

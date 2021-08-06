@@ -1,9 +1,12 @@
 #include <iostream>
 #include <fstream>
+#include <nlohmann/json.hpp>
 
 #include "terminal-display.h"
 #include "creatures.h"
 #include "items.h"
+
+using json = nlohmann::json;
 
 using namespace TerminalDisplayFeatures;
 using namespace CreaturesFeatures;
@@ -11,36 +14,61 @@ using namespace ItemsFeatures;
 
 TerminalDisplay terminalDisplay = TerminalDisplay();
 
-void
-Menu();
+namespace {
+
+class Game {
+    public:
+        Game() 
+            : m_player(LoadPlayer())
+        {
+        };
+
+        void Menu();
+
+        void PrintBattleMenu();
+
+        void SkillsMenuInBattle(const Enemy enemy);
+
+        void ItemsMenuInBattle(const Enemy enemy);
+
+        void BattleResults(Player& player, const Enemy enemy, bool playerWon);
+        
+        void Battle();
+
+        void WorldMap();
+
+        void Status();
+
+        void Inventory();        
+
+        Enemy LoadEnemy(std::string name);
+
+        Player LoadPlayer();
+
+        void SavePlayer(Player m_player);
+
+
+    private:
+        Player m_player;
+};
+    
+}
 
 Player
-LoadPlayer() {
-    std::ifstream MyReadFile("data/player.txt");
-    if (!MyReadFile.is_open()) {
+Game::LoadPlayer() {
+    std::ifstream file("data/player.json");
+    if (!file.is_open()) {
         std::cerr << "Could not open the file - '"
-             << "player.txt" << "'\n";
+            << "player.txt" << "'\n";
         EXIT_FAILURE;
     }
 
-    std::map<std::string, int> playerStats;
-    std::vector<std::string> playerStatsOrder {
-        {"maxHealth"},
-        {"maxSkillsPoints"},
-        {"level"},
-        {"totalExperience"}
-    };
+    json j;
+    file >> j;
 
-    int number;
-    for (int i = 0; MyReadFile >> number; i++) {
-        playerStats.emplace(playerStatsOrder[i], number);
-    }
+    Player player = Player(j);
 
-    MyReadFile.close();
-
-    Player player = Player("Danierusan", playerStats);
-
-        // JUST TO TEST INVENTORY SYSTEM
+    //   JUST TO TEST INVENTORY SYSTEM
     Weapon weapon = Weapon("TrollSlayer", "A magic sword to kill internet trolls",
         "data/items/magicsword.txt", 100, std::make_pair(PropertyName::kAttack, 100));
     player.AddItemToInventory(weapon);
@@ -52,13 +80,12 @@ LoadPlayer() {
     player.AddItemToInventory(helmet);
     player.OnEquip(helmet);
 
+
     return player;
 }
 
-Player player = LoadPlayer();
-
 Enemy
-LoadEnemy(std::string monsterName){
+Game::LoadEnemy(std::string monsterName){
     std::ifstream MyReadFile("data/"+ monsterName +".txt");
     if (!MyReadFile.is_open()) {
         std::cerr << "Could not open the file - '"
@@ -83,7 +110,7 @@ LoadEnemy(std::string monsterName){
 }
 
 void
-SavePlayer(const Player player) {
+Game::SavePlayer(const Player player) {
 
     std::ofstream myfile;
     myfile.open ("data/player.txt");
@@ -95,18 +122,18 @@ SavePlayer(const Player player) {
 
 }
 
-std::map<std::string, int> 
-ReadStatsFromFile(std::string creatureName) {
-    std::map<std::string, int> creatureStats = {
-        {"maxHealth", 100},
-        {"maxSkillsPoints", 10}
-    };
-    return creatureStats;
-}
+// std::map<std::string, int> 
+// ReadStatsFromFile(std::string creatureName) {
+//     std::map<std::string, int> creatureStats = {
+//         {"maxHealth", 100},
+//         {"maxSkillsPoints", 10}
+//     };
+//     return creatureStats;
+// }
 
 void
-SkillsMenuInBattle(const Player player, const Enemy enemy) {
-    terminalDisplay.PrintBattle(player, enemy, BattleMenuOptions::kSkills);
+Game::SkillsMenuInBattle(const Enemy enemy) {
+    terminalDisplay.PrintBattle(m_player, enemy, BattleMenuOptions::kSkills);
 
     //Reading player choice
     char choice;
@@ -114,8 +141,8 @@ SkillsMenuInBattle(const Player player, const Enemy enemy) {
 }
 
 void
-ItemsMenuInBattle(const Player player, const Enemy enemy) {
-    terminalDisplay.PrintBattle(player, enemy, BattleMenuOptions::kItems);
+Game::ItemsMenuInBattle(const Enemy enemy) {
+    terminalDisplay.PrintBattle(m_player, enemy, BattleMenuOptions::kItems);
 
     //Reading player choice
     char choice;
@@ -123,7 +150,7 @@ ItemsMenuInBattle(const Player player, const Enemy enemy) {
 }
 
 void
-BattleResults(Player& player, const Enemy enemy, bool playerWon) {
+Game::BattleResults(Player& player, const Enemy enemy, bool playerWon) {
     if (playerWon) {
         player.AddExperience(enemy.GetExperience());
         while (player.GetExperience() >= player.GetNextLevelExperience()) {
@@ -138,9 +165,9 @@ BattleResults(Player& player, const Enemy enemy, bool playerWon) {
 }
 
 void
-Battle() {
-    std::map<std::string, int> playerStats = ReadStatsFromFile("player");
-    std::map<std::string, int> enemyStats = ReadStatsFromFile("monstername");
+Game::Battle() {
+    // std::map<std::string, int> playerStats = ReadStatsFromFile("player");
+    // std::map<std::string, int> enemyStats = ReadStatsFromFile("monstername");
     
     Enemy enemy = LoadEnemy("troll");
 
@@ -150,7 +177,7 @@ Battle() {
 
     while (!playerWon && !enemyWon && !battleOver) {
         //printing battle scene
-        terminalDisplay.PrintBattle(player, enemy, BattleMenuOptions::kMenu);
+        terminalDisplay.PrintBattle(m_player, enemy, BattleMenuOptions::kMenu);
         
         //Reading player choice
         char choice;
@@ -159,22 +186,22 @@ Battle() {
         switch (choice) {
             case '1':
                 //Case Attack
-                if (player.Attack(enemy)) {
+                if (m_player.Attack(enemy)) {
                     playerWon = true;
                     break;
                 }
-                if (enemy.Attack(player)) {
+                if (enemy.Attack(m_player)) {
                     enemyWon = true;
                     break;
                 }
                 break;
             case '2':
                 //Case Items
-                ItemsMenuInBattle(player, enemy);
+                ItemsMenuInBattle(enemy);
                 break;
             case '3':
                 //Case Skills
-                SkillsMenuInBattle(player, enemy);
+                SkillsMenuInBattle(enemy);
                 break;
             case '4':
                 //Case Exit
@@ -188,13 +215,13 @@ Battle() {
     if (battleOver) {
         Menu();
     } else {
-        terminalDisplay.PrintBattleResults(player, enemy, playerWon);
-        BattleResults(player, enemy, playerWon);
+        terminalDisplay.PrintBattleResults(m_player, enemy, playerWon);
+        BattleResults(m_player, enemy, playerWon);
     }
 }
 
 void
-WorldMap() {
+Game::WorldMap() {
     //printing world map
     terminalDisplay.PrintWorldMap();
 
@@ -212,9 +239,9 @@ WorldMap() {
 }
 
 void
-Status() {
+Game::Status() {
     //printing status
-    terminalDisplay.PrintStatusMenu(LoadPlayer());
+    terminalDisplay.PrintStatusMenu(m_player);
 
     //Reading player choice
     char choice;
@@ -228,12 +255,12 @@ Status() {
 }
 
 void
-Inventory() {
+Game::Inventory() {
 
     
 
     //printing inventory
-    terminalDisplay.PrintInventoryMenu(player);
+    terminalDisplay.PrintInventoryMenu(m_player);
 
     //Reading player choice
     char choice;
@@ -247,7 +274,7 @@ Inventory() {
 }
 
 void
-Menu() {
+Game::Menu() {
     //printing menu
     terminalDisplay.PrintMainMenu();
 
@@ -262,8 +289,6 @@ Menu() {
             Status();
         case '3':
             Inventory();
-        case '0':
-            break;
         default:
             break;
     }
@@ -271,10 +296,13 @@ Menu() {
 }
 
 
+
+
+
 int
 main() {
-
-    Menu();
+    Game game = Game();
+    game.Menu();
 
     return 1;
 }
