@@ -3,9 +3,11 @@
 
 #include "terminal-display.h"
 #include "creatures.h"
+#include "items.h"
 
 using namespace TerminalDisplayFeatures;
 using namespace CreaturesFeatures;
+using namespace ItemsFeatures;
 
 TerminalDisplay terminalDisplay = TerminalDisplay();
 
@@ -23,10 +25,10 @@ LoadPlayer() {
 
     std::map<std::string, int> playerStats;
     std::vector<std::string> playerStatsOrder {
-     {"maxHealth"},
-     {"maxSkillsPoints"},
-     {"level"},
-     {"totalExperience"}
+        {"maxHealth"},
+        {"maxSkillsPoints"},
+        {"level"},
+        {"totalExperience"}
     };
 
     int number;
@@ -36,12 +38,8 @@ LoadPlayer() {
 
     MyReadFile.close();
 
-    Player player = Player("Adolfo", playerStats);
-    return player;
+    return Player("Danierusan", playerStats);
 }
-
-// Enemy
-
 
 Enemy
 LoadEnemy(std::string monsterName){
@@ -58,9 +56,9 @@ LoadEnemy(std::string monsterName){
      {"experience"}
     };
 
-    int number;
-    for (int i = 0; MyReadFile >> number; i++) {
-        stats.emplace(statsOrder[i], number);
+    int value;
+    for (int i = 0; MyReadFile >> value; i++) {
+        stats.emplace(statsOrder[i], value);
     }
 
     MyReadFile.close();
@@ -130,7 +128,16 @@ Battle() {
     std::map<std::string, int> enemyStats = ReadStatsFromFile("monstername");
 
     Player player = LoadPlayer();
-    Enemy enemy = LoadEnemy("rat");
+    
+    // CAGADA COM ITEMS CONSERTAR DEPOIS
+    
+    Weapon weapon = Weapon("TrollSlayer", "A magic sword to kill internet trolls",
+        "data/items/magicsword.txt", 100, std::make_pair(PropertyName::kAttack, 100));
+    player.AddItemToInventory(weapon);
+    player.OnEquip(weapon);
+
+
+    Enemy enemy = LoadEnemy("troll");
 
     // Previous loading version
     // Player player = Player("player", ReadStatsFromFile("player"));
@@ -220,6 +227,35 @@ Status() {
 }
 
 void
+Inventory() {
+
+    // JUST TO TEST INVENTORY SYSTEM
+    Player player = LoadPlayer();
+    Weapon weapon = Weapon("TrollSlayer", "A magic sword to kill internet trolls",
+        "data/items/magicsword.txt", 100, std::make_pair(PropertyName::kAttack, 100));
+    player.AddItemToInventory(weapon);
+    player.OnEquip(weapon);
+
+    Helmet helmet = Helmet("Hunter's cap", "A helmet that never let you down",
+        "data/items/magicsword.txt", 100, std::make_pair(PropertyName::kDefense, 100));
+    player.AddItemToInventory(helmet);
+    player.AddItemToInventory(helmet);
+
+    //printing inventory
+    terminalDisplay.PrintInventoryMenu(player);
+
+    //Reading player choice
+    char choice;
+    std::cin >> choice;
+    switch (choice) {
+        //There is no cases for now
+        default:
+            Menu();
+            break;
+    }
+}
+
+void
 Menu() {
     //printing menu
     terminalDisplay.DisplayScene(SceneState::kMenu);
@@ -235,6 +271,9 @@ Menu() {
         case '2':
             Status();
             terminalDisplay.DisplayScene(SceneState::kStatus);
+        case '3':
+            Inventory();
+            terminalDisplay.DisplayScene(SceneState::kInventory);
         case '0':
             break;
         default:
