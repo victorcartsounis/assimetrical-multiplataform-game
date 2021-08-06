@@ -35,6 +35,8 @@ class TerminalDisplay{
 
         void PrintInventoryMenu(const Player player);
 
+        void PrintStatusMenu(const Player player);
+
         std::string LoadSceneFromFile(std::string filepath);
     
     private:

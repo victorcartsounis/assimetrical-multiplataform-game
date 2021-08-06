@@ -41,6 +41,8 @@ LoadPlayer() {
     return Player("Danierusan", playerStats);
 }
 
+Player player = LoadPlayer();
+
 Enemy
 LoadEnemy(std::string monsterName){
     std::ifstream MyReadFile("data/"+ monsterName +".txt");
@@ -63,8 +65,7 @@ LoadEnemy(std::string monsterName){
 
     MyReadFile.close();
 
-    Enemy enemy = Enemy(monsterName, stats);
-    return enemy;
+    return Enemy(monsterName, stats);
 }
 
 void
@@ -126,15 +127,7 @@ void
 Battle() {
     std::map<std::string, int> playerStats = ReadStatsFromFile("player");
     std::map<std::string, int> enemyStats = ReadStatsFromFile("monstername");
-
-    Player player = LoadPlayer();
     
-    // CAGADA COM ITEMS CONSERTAR DEPOIS
-    
-    Weapon weapon = Weapon("TrollSlayer", "A magic sword to kill internet trolls",
-        "data/items/magicsword.txt", 100, std::make_pair(PropertyName::kAttack, 100));
-    player.AddItemToInventory(weapon);
-    player.OnEquip(weapon);
 
 
     Enemy enemy = LoadEnemy("troll");
@@ -213,7 +206,7 @@ WorldMap() {
 void
 Status() {
     //printing status
-    terminalDisplay.DisplayScene(SceneState::kStatus);
+    terminalDisplay.PrintStatusMenu(LoadPlayer());
 
     //Reading player choice
     char choice;
@@ -229,17 +222,7 @@ Status() {
 void
 Inventory() {
 
-    // JUST TO TEST INVENTORY SYSTEM
-    Player player = LoadPlayer();
-    Weapon weapon = Weapon("TrollSlayer", "A magic sword to kill internet trolls",
-        "data/items/magicsword.txt", 100, std::make_pair(PropertyName::kAttack, 100));
-    player.AddItemToInventory(weapon);
-    player.OnEquip(weapon);
-
-    Helmet helmet = Helmet("Hunter's cap", "A helmet that never let you down",
-        "data/items/magicsword.txt", 100, std::make_pair(PropertyName::kDefense, 100));
-    player.AddItemToInventory(helmet);
-    player.AddItemToInventory(helmet);
+    
 
     //printing inventory
     terminalDisplay.PrintInventoryMenu(player);
@@ -270,10 +253,8 @@ Menu() {
             break;
         case '2':
             Status();
-            terminalDisplay.DisplayScene(SceneState::kStatus);
         case '3':
             Inventory();
-            terminalDisplay.DisplayScene(SceneState::kInventory);
         case '0':
             break;
         default:
@@ -281,8 +262,21 @@ Menu() {
     }
 }
 
+
 int
 main() {
+
+    // JUST TO TEST INVENTORY SYSTEM
+    Weapon weapon = Weapon("TrollSlayer", "A magic sword to kill internet trolls",
+        "data/items/magicsword.txt", 100, std::make_pair(PropertyName::kAttack, 100));
+    player.AddItemToInventory(weapon);
+    player.OnEquip(weapon);
+
+    Helmet helmet = Helmet("Hunter's cap", "A helmet that never let you down",
+        "data/items/magicsword.txt", 100, std::make_pair(PropertyName::kDefense, 100));
+    player.AddItemToInventory(helmet);
+    player.AddItemToInventory(helmet);
+
     Menu();
     return 1;
 }

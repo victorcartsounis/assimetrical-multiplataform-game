@@ -82,6 +82,8 @@ class Player : public Creature {
         {
         };
 
+        int GetAttack() const { return m_attack; }
+
         int GetLevel() const { return m_level; }
 
         int GetExperience() const { return m_totalExperience; }

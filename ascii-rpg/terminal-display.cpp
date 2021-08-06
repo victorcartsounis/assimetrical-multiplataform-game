@@ -45,6 +45,18 @@ TerminalDisplay::DisplayScene(SceneState sceneState) {
 }
 
 void
+TerminalDisplay::PrintStatusMenu(const Player player) {
+    ClearTerminal();
+    std::cout << "----------------- Player: " << player.GetName() << " -----------------\n\n";
+    std::cout << "Level: " << player.GetLevel() << std::endl;
+    std::cout << "Experience: " << player.GetExperience() 
+            << "/" << player.GetNextLevelExperience() << std::endl;
+    std::cout << "Attack: " << player.GetAttack() << std::endl;
+    std::cout << "Defense: " << player.GetDefense() << std::endl;
+
+}
+
+void
 TerminalDisplay::PrintInventoryMenu(const Player player) {
     ClearTerminal();
     std::cout << "---------------------- INVENTORY -----------------------\n\n";
