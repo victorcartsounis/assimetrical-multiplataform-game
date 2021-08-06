@@ -38,7 +38,21 @@ LoadPlayer() {
 
     MyReadFile.close();
 
-    return Player("Danierusan", playerStats);
+    Player player = Player("Danierusan", playerStats);
+
+        // JUST TO TEST INVENTORY SYSTEM
+    Weapon weapon = Weapon("TrollSlayer", "A magic sword to kill internet trolls",
+        "data/items/magicsword.txt", 100, std::make_pair(PropertyName::kAttack, 100));
+    player.AddItemToInventory(weapon);
+    player.OnEquip(weapon);
+
+    Helmet helmet = Helmet("Hunter's cap", "A helmet that never let you down",
+        "data/items/magicsword.txt", 100, std::make_pair(PropertyName::kDefense, 100));
+    player.AddItemToInventory(helmet);
+    player.AddItemToInventory(helmet);
+    player.OnEquip(helmet);
+
+    return player;
 }
 
 Player player = LoadPlayer();
@@ -128,13 +142,7 @@ Battle() {
     std::map<std::string, int> playerStats = ReadStatsFromFile("player");
     std::map<std::string, int> enemyStats = ReadStatsFromFile("monstername");
     
-
-
     Enemy enemy = LoadEnemy("troll");
-
-    // Previous loading version
-    // Player player = Player("player", ReadStatsFromFile("player"));
-    // Enemy enemy = Enemy("rat", ReadStatsFromFile("rat"));
 
     bool playerWon = false;
     bool enemyWon = false;
@@ -188,7 +196,7 @@ Battle() {
 void
 WorldMap() {
     //printing world map
-    terminalDisplay.DisplayScene(SceneState::kWorldMap);
+    terminalDisplay.PrintWorldMap();
 
     //Reading choice
     char choice;
@@ -241,14 +249,13 @@ Inventory() {
 void
 Menu() {
     //printing menu
-    terminalDisplay.DisplayScene(SceneState::kMenu);
+    terminalDisplay.PrintMainMenu();
 
     //Reading player choice
     char choice;
     std::cin >> choice;
     switch (choice) {
         case '1':
-            terminalDisplay.DisplayScene(SceneState::kWorldMap);
             WorldMap();
             break;
         case '2':
@@ -260,23 +267,14 @@ Menu() {
         default:
             break;
     }
+    terminalDisplay.ClearTerminal();
 }
 
 
 int
 main() {
 
-    // JUST TO TEST INVENTORY SYSTEM
-    Weapon weapon = Weapon("TrollSlayer", "A magic sword to kill internet trolls",
-        "data/items/magicsword.txt", 100, std::make_pair(PropertyName::kAttack, 100));
-    player.AddItemToInventory(weapon);
-    player.OnEquip(weapon);
-
-    Helmet helmet = Helmet("Hunter's cap", "A helmet that never let you down",
-        "data/items/magicsword.txt", 100, std::make_pair(PropertyName::kDefense, 100));
-    player.AddItemToInventory(helmet);
-    player.AddItemToInventory(helmet);
-
     Menu();
+
     return 1;
 }

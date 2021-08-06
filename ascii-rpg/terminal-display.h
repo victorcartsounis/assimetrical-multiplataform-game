@@ -27,7 +27,9 @@ class TerminalDisplay{
 
         void ClearTerminal();
 
-        void DisplayScene(SceneState screenState);
+        void PrintMainMenu();
+
+        void PrintWorldMap();
         
         void PrintBattleResults(const Player player, const Enemy enemy, bool playerWon);
 
