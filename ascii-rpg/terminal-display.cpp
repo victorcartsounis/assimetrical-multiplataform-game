@@ -97,7 +97,7 @@ PrintBattleMenu(const Player player, const Enemy enemy) {
 
         //printing ENEMY skill points
         std::string enemySkillPointsBar = "";
-        enemySkillPointsBar = std::to_string(player.GetSkillPoints()) + "/" + std::to_string(player.GetMaxSkillPoints());
+        enemySkillPointsBar = std::to_string(enemy.GetSkillPoints()) + "/" + std::to_string(enemy.GetMaxSkillPoints());
         int enemySkillPointsBarSize = 13 - enemySkillPointsBar.size();
         for (int i = 0; i < enemySkillPointsBarSize; i++) {
             enemySkillPointsBar += " ";
@@ -132,15 +132,13 @@ TerminalDisplay::PrintBattleResults(Player player, Enemy enemy, bool playerWon) 
 }
 
 void
-TerminalDisplay::PrintBattle(Player player, Enemy enemy, BattleMenuOptions battleMenuOption = BattleMenuOptions::kMenu) {
+TerminalDisplay::PrintBattle(const Player player, const Enemy enemy, BattleMenuOptions battleMenuOption = BattleMenuOptions::kMenu) {
     ClearTerminal();
     //Printing enemy image
-    std::cout << LoadSceneFromFile("terminal-display/creaturesimage/monstersample.txt");
-    // std::cout << LoadSceneFromFile("terminal-display/creaturesimage/" + enemy.GetName() + "txt");
+    std::cout << LoadSceneFromFile("data/monsters/icons/" + enemy.GetName() + ".txt");
     
     //Printing player image
     std::cout << LoadSceneFromFile("terminal-display/creaturesimage/playersample.txt");
-    // std::cout << LoadSceneFromFile("terminal-display/creaturesimage/" + player.GetName() + "txt");
 
     switch (battleMenuOption) {
         case BattleMenuOptions::kMenu:

@@ -1,0 +1,26 @@
+{
+    "items": [
+        {
+            "m_id": 12500,
+            "m_name": "TrollSlayer",
+            "m_type": "Weapon",
+            "m_description": "A magic sword to kill internet trolls",
+            "m_iconPath": "data/items/sprites/trollslayer.txt",
+            "equipable": true,
+            "m_properties": {
+                "kAttack": 100
+            }
+        },
+        {
+            "m_id": 12500,
+            "m_name": "Hunter's cap",
+            "m_type": "Helmet",
+            "m_description": "It wont let you down, literally",
+            "m_iconPath": "data/items/sprites/hunterscap.txt",
+            "equipable": true,
+            "m_properties": {
+                "kDefense": 100
+            }
+        }
+    ]
+}

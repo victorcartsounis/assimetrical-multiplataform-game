@@ -2,17 +2,30 @@
 #define CREATURES
 
 #include "items.h"
+#include <nlohmann/json.hpp>
 
 #include <map>
 #include <vector>
 
 
+using json = nlohmann::json;
 using namespace ItemsFeatures;
 
 namespace CreaturesFeatures {
 
 class Creature {
     public:
+        Creature(json j)
+            : m_name(j["name"].get<std::string>())
+            , m_maxHealth(j["health"].get<int>())
+            , m_actualHealth(m_maxHealth)
+            , m_maxSkillPoints(j["skillPoints"].get<int>())
+            , m_actualSkillPoints(m_maxSkillPoints)
+            , m_attack(j["attack"].get<int>())
+            , m_defense(j["defense"].get<int>())
+        {
+        };
+
         Creature(std::string name, std::map<std::string, int> creatureStats) 
             : m_name(name)
             , m_maxHealth(creatureStats["maxHealth"])
@@ -57,9 +70,9 @@ class Creature {
 
 class Enemy : public Creature {
     public:
-        Enemy(std::string name, std::map<std::string, int> creatureStats) 
-            : Creature(name, creatureStats)
-            , m_experience(creatureStats["experience"])
+        Enemy(json j)
+            : Creature(j)
+            , m_experience(j["experience"].get<int>())
         {
         };
 
@@ -75,12 +88,15 @@ class Enemy : public Creature {
 
 class Player : public Creature {
     public:
-        Player(std::string name, std::map<std::string, int> playerStats)
-            : Creature(name, playerStats)
-            , m_level(playerStats["level"])
-            , m_totalExperience(playerStats["totalExperience"])
-        {
+        Player(json j)
+            : Creature(j)
+            , m_id(j["id"].get<int>())
+            , m_level(j["level"].get<int>())
+            , m_totalExperience(j["experience"].get<int>())
+        {  
         };
+
+        int GetId() const { return m_id; }
 
         int GetAttack() const { return m_attack; }
 
@@ -115,10 +131,11 @@ class Player : public Creature {
         void OnDequip(Item& item);
 
     private:
-        int m_level = 0;
-        int m_totalExperience = 0;
-        std::vector<int> m_levelExperience {1000, 2000, 4000, 8000, 16000, 32000, 64000, 128000, 256000, 512000, 1024000, 2048000};
+        int m_id;
+        int m_level;
+        int m_totalExperience;
         std::vector<Item> m_inventory;
+        std::vector<int> m_levelExperience {1000, 2000, 4000, 8000, 16000, 32000, 64000, 128000, 256000, 512000, 1024000, 2048000};
 
 };
 

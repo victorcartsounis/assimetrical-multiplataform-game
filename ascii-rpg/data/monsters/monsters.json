@@ -1,0 +1,29 @@
+{
+    "monsters": [
+        {
+            "name": "Troll",
+            "experience": 500,
+            "health": 1000,
+            "skillPoints": 1000,
+            "attack": 10,
+            "defense": 10
+        },
+        {
+            "name": "Dragon",
+            "experience": 5000,
+            "health": 10000,
+            "skillPoints": 1000,
+            "attack": 30,
+            "defense": 40
+        }
+    ]
+
+
+
+
+
+
+
+
+
+}
