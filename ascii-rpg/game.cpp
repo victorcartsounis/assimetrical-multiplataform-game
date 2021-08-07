@@ -20,6 +20,7 @@ class Game {
     public:
         Game() 
             : m_player(LoadPlayer())
+            , m_enemies(LoadEnemies())
         {
         };
 
@@ -33,23 +34,25 @@ class Game {
 
         void BattleResults(Player& player, const Enemy enemy, bool playerWon);
         
-        void Battle();
+        void Battle(Enemy enemy);
 
         void WorldMap();
 
-        void Status();
+        void StatusMenu();
 
-        void Inventory();        
+        void InventoryMenu();        
 
         Enemy LoadEnemy(std::string name);
 
+        std::vector<Enemy> LoadEnemies();
+
         Player LoadPlayer();
 
-        void SavePlayer(Player m_player);
-
+        void SavePlayer();
 
     private:
         Player m_player;
+        std::vector<Enemy> m_enemies;
 };
     
 }
@@ -66,6 +69,8 @@ Game::LoadPlayer() {
     json j;
     file >> j;
 
+    file.close();
+
     Player player = Player(j);
 
     //   JUST TO TEST INVENTORY SYSTEM
@@ -80,56 +85,76 @@ Game::LoadPlayer() {
     player.AddItemToInventory(helmet);
     player.OnEquip(helmet);
 
-
     return player;
 }
 
-Enemy
-Game::LoadEnemy(std::string monsterName){
-    std::ifstream MyReadFile("data/"+ monsterName +".txt");
-    if (!MyReadFile.is_open()) {
+std::vector<Enemy>
+Game::LoadEnemies() {
+    std::ifstream file("data/monsters/monsters.json");
+    if (!file.is_open()) {
         std::cerr << "Could not open the file - '"
-             << "data/" << monsterName << ".txt" << "'\n";
+             << "data/monsters/monsters.json" << "'\n";
         EXIT_FAILURE;
     }
-    std::map<std::string, int> stats;
-    std::vector<std::string> statsOrder {
-     {"maxHealth"},
-     {"maxSkillsPoints"},
-     {"experience"}
-    };
 
-    int value;
-    for (int i = 0; MyReadFile >> value; i++) {
-        stats.emplace(statsOrder[i], value);
+    json js;
+    file >> js;
+    
+    file.close();
+
+    std::vector<Enemy> enemies;
+
+    for (auto& j : js["monsters"]) {
+        std::cout << "It works";
+        enemies.emplace_back(Enemy(j));
+    }
+    std::cout << "It works 2";
+
+    return enemies;
+}
+
+Enemy
+Game::LoadEnemy(std::string monsterName) {
+    std::ifstream file("data/monsters/monsters.json");
+    if (!file.is_open()) {
+        std::cerr << "Could not open the file - '"
+             << "data/monsters/monsters.json" << "'\n";
+        EXIT_FAILURE;
     }
 
-    MyReadFile.close();
+    json js;
+    file >> js;
+    
+    file.close();
 
-    return Enemy(monsterName, stats);
+    for (auto& j : js["monsters"]) {
+        if (j["name"].get<std::string>() == monsterName){
+            return Enemy(j);
+        }
+    }
+
+    return Enemy(js["monsters"]);
 }
 
 void
-Game::SavePlayer(const Player player) {
+Game::SavePlayer() {
+    std::ofstream file;
+    file.open ("data/player.json");
 
-    std::ofstream myfile;
-    myfile.open ("data/player.txt");
-    myfile << player.GetMaxHealth() << "\n";
-    myfile << "9999" << "\n";
-    myfile << player.GetLevel() << "\n";
-    myfile << player.GetExperience() << "\n";
-    myfile.close();
+    json j;
+    j["id"] = m_player.GetId();
+    j["name"] = m_player.GetName();
+    j["level"] = m_player.GetLevel();
+    j["experience"] = m_player.GetExperience();
+    j["health"] = m_player.GetMaxHealth();
+    j["skillPoints"] = m_player.GetMaxSkillPoints();
+    j["attack"] = m_player.GetAttack();
+    j["defense"] = m_player.GetDefense();
 
+    file << j;
+
+    file.close();
 }
-
-// std::map<std::string, int> 
-// ReadStatsFromFile(std::string creatureName) {
-//     std::map<std::string, int> creatureStats = {
-//         {"maxHealth", 100},
-//         {"maxSkillsPoints", 10}
-//     };
-//     return creatureStats;
-// }
 
 void
 Game::SkillsMenuInBattle(const Enemy enemy) {
@@ -158,18 +183,14 @@ Game::BattleResults(Player& player, const Enemy enemy, bool playerWon) {
             std::cout << "!!LEVEL UP to level: " << player.GetLevel();
         }
     }
-    SavePlayer(player);
+    SavePlayer();
     char choice;
     std::cin >> choice;
     Menu();
 }
 
 void
-Game::Battle() {
-    // std::map<std::string, int> playerStats = ReadStatsFromFile("player");
-    // std::map<std::string, int> enemyStats = ReadStatsFromFile("monstername");
-    
-    Enemy enemy = LoadEnemy("troll");
+Game::Battle(Enemy enemy) {
 
     bool playerWon = false;
     bool enemyWon = false;
@@ -228,18 +249,16 @@ Game::WorldMap() {
     //Reading choice
     char choice;
     std::cin >> choice;
-    switch (choice) {
-        case '1':
-            Battle();
-            break;
-
-        default:
-            break;
+    std::cout << (choice - '0') << std::endl;
+    if ((choice - '0') <= m_enemies.size()) {
+        Battle(m_enemies[(choice - '0') - 1]);
+    } else {
+        Battle(m_enemies[0]);
     }
 }
 
 void
-Game::Status() {
+Game::StatusMenu() {
     //printing status
     terminalDisplay.PrintStatusMenu(m_player);
 
@@ -255,9 +274,7 @@ Game::Status() {
 }
 
 void
-Game::Inventory() {
-
-    
+Game::InventoryMenu() {
 
     //printing inventory
     terminalDisplay.PrintInventoryMenu(m_player);
@@ -286,18 +303,15 @@ Game::Menu() {
             WorldMap();
             break;
         case '2':
-            Status();
+            StatusMenu();
         case '3':
-            Inventory();
+            InventoryMenu();
         default:
             break;
     }
+    
     terminalDisplay.ClearTerminal();
 }
-
-
-
-
 
 int
 main() {

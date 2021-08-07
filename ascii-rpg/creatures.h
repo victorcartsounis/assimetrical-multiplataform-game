@@ -70,9 +70,9 @@ class Creature {
 
 class Enemy : public Creature {
     public:
-        Enemy(std::string name, std::map<std::string, int> creatureStats) 
-            : Creature(name, creatureStats)
-            , m_experience(creatureStats["experience"])
+        Enemy(json j)
+            : Creature(j)
+            , m_experience(j["experience"].get<int>())
         {
         };
 
@@ -95,6 +95,8 @@ class Player : public Creature {
             , m_totalExperience(j["experience"].get<int>())
         {  
         };
+
+        int GetId() const { return m_id; }
 
         int GetAttack() const { return m_attack; }
 

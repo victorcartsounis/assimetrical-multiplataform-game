@@ -1,16 +1,1 @@
-{
-    "id": 10000,
-    "name": "Danierusan",
-    "level": 10,
-    "experience": 618000,
-    "health": 1000,
-    "skillPoints": 1000,
-    "attack": 10,
-    "defense": 10,
-    "equipedItems":{
-        "id": 12500
-    },
-    "inventory": {
-        "id": 12500
-    } 
-}
+{"attack":10,"defense":10,"experience":665000,"health":1000,"id":10000,"level":10,"name":"Danierusan","skillPoints":1000}
